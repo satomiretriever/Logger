@@ -7,7 +7,18 @@ Logger for Swift with Xcode Color
   
 # Install
 1. Carthage
-  - https://github.com/Carthage/Carthage
+  - Detail: https://github.com/Carthage/Carthage
+  - Example
+```
+# Cartfile
+# add this line
+github "satomyumi/Logger"
+
+# Command
+$ carthage update
+```
+
+
 2. Manually Installation
   - Move Logger.swift to your project
   
