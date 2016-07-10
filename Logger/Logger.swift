@@ -14,97 +14,73 @@ class Logger {
         case Debug, Info, Success, Warning, Error
     }
     
-    // has no message string argument
-    class func landmark(
-        function: String = __FUNCTION__,
-        file: String = __FILE__,
-        line: Int = __LINE__) { Logger.write(function, file: file, line: line) };
-    class func write(
-        function: String,
-        file: String,
-        line: Int) {
-            let now = NSDate()
-            let dateFormatter = NSDateFormatter()
-            dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP")
-            dateFormatter.timeStyle = .MediumStyle
-            dateFormatter.dateStyle = .MediumStyle
-            //println(dateFormatter.stringFromDate(now)) // => 2014/12/11 15:19:04
-            
-            let nowdate = dateFormatter.stringFromDate(now)
-            
-            var filename = file
-            if let match = filename.rangeOfString("[^/]*$", options: .RegularExpressionSearch) {
-                filename = filename.substringWithRange(match)
-            }
-            ColorLog.info("\(nowdate) [\(filename) - \(function) \(line)]")
+    class func landmark(function: String = #function, file: String = #file, line: Int = #line) {
+        Logger.write(function: function, file: file, line: line)
     }
     
-    // has message string argument
-    class func debug(
-        message: String,
-        function: String = __FUNCTION__,
-        file: String = __FILE__,
-        line: Int = __LINE__) { Logger.write("DEBUG", message: message, function: function, file: file, line: line, color: .Debug) };
+    class func write(function: String, file: String, line: Int) {
+        let now = NSDate()
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(localeIdentifier: "ja_JP")
+        dateFormatter.timeStyle = .mediumStyle
+        dateFormatter.dateStyle = .mediumStyle
+        //println(dateFormatter.stringFromDate(now)) // => 2014/12/11 15:19:04
+        
+        let nowdate = dateFormatter.string(from: now as Date)
+        
+        var filename = file
+        if let match = filename.range(of: "[^/]*$", options: .regularExpressionSearch) {
+            filename = filename.substring(with: match)
+        }
+        ColorLog.info(object: "\(nowdate) [\(filename) - \(function) \(line)]")
+    }
     
-    class func info(
-        message: String,
-        function: String = __FUNCTION__,
-        file: String = __FILE__,
-        line: Int = __LINE__) { Logger.write("INFO", message: message, function: function, file: file, line: line, color: .Info) };
+    class func debug(message: String, function: String = #function, file: String = #file, line: Int = #line) {
+        Logger.write(loglevel: "DEBUG", message: message, function: function, file: file, line: line, color: .Debug)
+    }
     
-    class func success(
-        message: String,
-        function: String = __FUNCTION__,
-        file: String = __FILE__,
-        line: Int = __LINE__) { Logger.write("SUCCESS", message: message, function: function, file: file, line: line, color: .Success) };
+    class func info(message: String, function: String = #function, file: String = #file, line: Int = #line) {
+        Logger.write(loglevel: "INFO", message: message, function: function, file: file, line: line, color: .Info)
+    }
     
-    class func warning(
-        message: String,
-        function: String = __FUNCTION__,
-        file: String = __FILE__,
-        line: Int = __LINE__) { Logger.write("WARNING", message: message, function: function, file: file, line: line, color: .Warning) };
+    class func success(message: String, function: String = #function, file: String = #file, line: Int = #line) {
+        Logger.write(loglevel: "SUCCESS", message: message, function: function, file: file, line: line, color: .Success)
+    }
     
-    class func error(
-        message: String?,
-        function: String = __FUNCTION__,
-        file: String = __FILE__,
-        line: Int = __LINE__) {
-            if message != nil {
-                Logger.write("ERROR", message: message, function: function, file: file, line: line, color: .Error)
-            }
-    };
+    class func warning(message: String, function: String = #function, file: String = #file, line: Int = #line) {
+        Logger.write(loglevel: "WARNING", message: message, function: function, file: file, line: line, color: .Warning)
+    }
     
-    class func write(
-        loglevel: String,
-        message: String?,
-        function: String,
-        file: String,
-        line: Int,
-        color: Colors
-        ) {
-            let now = NSDate()
-            let dateFormatter = NSDateFormatter()
-            dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP")
-            dateFormatter.timeStyle = .MediumStyle
-            dateFormatter.dateStyle = .MediumStyle
-            //println(dateFormatter.stringFromDate(now)) // => 2014/12/11 15:19:04
-            
-            let nowdate = dateFormatter.stringFromDate(now)
-            
-            var filename = file
-            if let match = filename.rangeOfString("[^/]*$", options: .RegularExpressionSearch) {
-                filename = filename.substringWithRange(match)
-            }
-            let _message = message != nil ? "\(nowdate) [\(loglevel)][\(filename) - \(function) \(line)] \(message!)" : ""
-            
-            switch color {
-            case .Debug:	ColorLog.debug(_message)
-            case .Info:		ColorLog.info(_message)
-            case .Warning:	ColorLog.warning(_message)
-            case .Error:	ColorLog.error(_message)
-            case .Success:	ColorLog.success(_message)
-            }
-            
+    class func error(message: String?, function: String = #function, file: String = #file, line: Int = #line) {
+        if message != nil {
+            Logger.write(loglevel: "ERROR", message: message, function: function, file: file, line: line, color: .Error)
+        }
+    }
+    
+    class func write(loglevel: String, message: String?, function: String, file: String, line: Int, color: Colors) {
+        let now = NSDate()
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(localeIdentifier: "ja_JP")
+        dateFormatter.timeStyle = .mediumStyle
+        dateFormatter.dateStyle = .mediumStyle
+        //println(dateFormatter.stringFromDate(now)) // => 2014/12/11 15:19:04
+        
+        let nowdate = dateFormatter.string(from: now as Date)
+        
+        var filename = file
+        if let match = filename.range(of: "[^/]*$", options: .regularExpressionSearch) {
+            filename = filename.substring(with: match)
+        }
+        let _message = message != nil ? "\(nowdate) [\(loglevel)][\(filename) - \(function) \(line)] \(message!)" : ""
+        
+        switch color {
+        case .Debug:	ColorLog.debug(object: _message)
+        case .Info:		ColorLog.info(object: _message)
+        case .Warning:	ColorLog.warning(object: _message)
+        case .Error:	ColorLog.error(object: _message)
+        case .Success:	ColorLog.success(object: _message)
+        }
+        
     }
 }
 
