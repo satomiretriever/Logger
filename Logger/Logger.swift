@@ -11,74 +11,74 @@ import Foundation
 class Logger {
     
     enum Colors {
-        case Debug, Info, Success, Warning, Error
+        case debug, info, success, warning, error
     }
     
-    class func landmark(function: String = #function, file: String = #file, line: Int = #line) {
-        Logger.write(function: function, file: file, line: line)
+    class func landmark(_ function: String = #function, file: String = #file, line: Int = #line) {
+        Logger.write(function, file: file, line: line)
     }
     
-    class func write(function: String, file: String, line: Int) {
-        let now = NSDate()
+    class func write(_ function: String, file: String, line: Int) {
+        let now = Date()
         let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(localeIdentifier: "ja_JP")
-        dateFormatter.timeStyle = .mediumStyle
-        dateFormatter.dateStyle = .mediumStyle
+        dateFormatter.locale = Locale(identifier: "ja_JP")
+        dateFormatter.timeStyle = .medium
+        dateFormatter.dateStyle = .medium
         //println(dateFormatter.stringFromDate(now)) // => 2014/12/11 15:19:04
         
         let nowdate = dateFormatter.string(from: now as Date)
         
         var filename = file
-        if let match = filename.range(of: "[^/]*$", options: .regularExpressionSearch) {
+        if let match = filename.range(of: "[^/]*$", options: .regularExpression) {
             filename = filename.substring(with: match)
         }
-        ColorLog.info(object: "\(nowdate) [\(filename) - \(function) \(line)]")
+        ColorLog.info("\(nowdate) [\(filename) - \(function) \(line)]")
     }
     
-    class func debug(message: String, function: String = #function, file: String = #file, line: Int = #line) {
-        Logger.write(loglevel: "DEBUG", message: message, function: function, file: file, line: line, color: .Debug)
+    class func debug(_ message: String, function: String = #function, file: String = #file, line: Int = #line) {
+        Logger.write("DEBUG", message: message, function: function, file: file, line: line, color: .debug)
     }
     
-    class func info(message: String, function: String = #function, file: String = #file, line: Int = #line) {
-        Logger.write(loglevel: "INFO", message: message, function: function, file: file, line: line, color: .Info)
+    class func info(_ message: String, function: String = #function, file: String = #file, line: Int = #line) {
+        Logger.write("INFO", message: message, function: function, file: file, line: line, color: .info)
     }
     
-    class func success(message: String, function: String = #function, file: String = #file, line: Int = #line) {
-        Logger.write(loglevel: "SUCCESS", message: message, function: function, file: file, line: line, color: .Success)
+    class func success(_ message: String, function: String = #function, file: String = #file, line: Int = #line) {
+        Logger.write("SUCCESS", message: message, function: function, file: file, line: line, color: .success)
     }
     
-    class func warning(message: String, function: String = #function, file: String = #file, line: Int = #line) {
-        Logger.write(loglevel: "WARNING", message: message, function: function, file: file, line: line, color: .Warning)
+    class func warning(_ message: String, function: String = #function, file: String = #file, line: Int = #line) {
+        Logger.write("WARNING", message: message, function: function, file: file, line: line, color: .warning)
     }
     
-    class func error(message: String?, function: String = #function, file: String = #file, line: Int = #line) {
+    class func error(_ message: String?, function: String = #function, file: String = #file, line: Int = #line) {
         if message != nil {
-            Logger.write(loglevel: "ERROR", message: message, function: function, file: file, line: line, color: .Error)
+            Logger.write("ERROR", message: message, function: function, file: file, line: line, color: .error)
         }
     }
     
-    class func write(loglevel: String, message: String?, function: String, file: String, line: Int, color: Colors) {
-        let now = NSDate()
+    class func write(_ loglevel: String, message: String?, function: String, file: String, line: Int, color: Colors) {
+        let now = Date()
         let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(localeIdentifier: "ja_JP")
-        dateFormatter.timeStyle = .mediumStyle
-        dateFormatter.dateStyle = .mediumStyle
+        dateFormatter.locale = Locale(identifier: "ja_JP")
+        dateFormatter.timeStyle = .medium
+        dateFormatter.dateStyle = .medium
         //println(dateFormatter.stringFromDate(now)) // => 2014/12/11 15:19:04
         
         let nowdate = dateFormatter.string(from: now as Date)
         
         var filename = file
-        if let match = filename.range(of: "[^/]*$", options: .regularExpressionSearch) {
+        if let match = filename.range(of: "[^/]*$", options: .regularExpression) {
             filename = filename.substring(with: match)
         }
         let _message = message != nil ? "\(nowdate) [\(loglevel)][\(filename) - \(function) \(line)] \(message!)" : ""
         
         switch color {
-        case .Debug:	ColorLog.debug(object: _message)
-        case .Info:		ColorLog.info(object: _message)
-        case .Warning:	ColorLog.warning(object: _message)
-        case .Error:	ColorLog.error(object: _message)
-        case .Success:	ColorLog.success(object: _message)
+        case .debug:	ColorLog.debug(_message)
+        case .info:		ColorLog.info(_message)
+        case .warning:	ColorLog.warning(_message)
+        case .error:	ColorLog.error(_message)
+        case .success:	ColorLog.success(_message)
         }
         
     }
@@ -91,27 +91,27 @@ struct ColorLog {
     static let RESET_BG = ESCAPE + "bg;" // Clear any background color
     static let RESET = ESCAPE + ";"   // Clear any foreground or background color
     
-    static func error<T>(object: T) {
+    static func error<T>(_ object: T) {
         print("\(ESCAPE)fg255,0,0;\(object)\(RESET)")
     }
     
-    static func success<T>(object: T) {
+    static func success<T>(_ object: T) {
         print("\(ESCAPE)fg200,238,90;\(object)\(RESET)")
     }
     
-    static func debug<T>(object: T) {
+    static func debug<T>(_ object: T) {
         print("\(ESCAPE)fg115,171,236;\(object)\(RESET)")
     }
     
-    static func warning<T>(object: T) {
+    static func warning<T>(_ object: T) {
         print("\(ESCAPE)fg245,156,35;\(object)\(RESET)")
     }
     
-    static func purple<T>(object: T) {
+    static func purple<T>(_ object: T) {
         print("\(ESCAPE)fg255,0,255;\(object)\(RESET)")
     }
     
-    static func info<T>(object: T) {
+    static func info<T>(_ object: T) {
         print("\(ESCAPE)fg200,200,200;\(object)\(RESET)")
     }
 }
